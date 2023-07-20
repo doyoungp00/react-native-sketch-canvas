@@ -37,9 +37,11 @@ class SketchCanvas extends React.Component {
         touchEnabled: PropTypes.bool,
 
         localSourceImage: PropTypes.shape({
-            filename: PropTypes.string,
+            backgroundImage: PropTypes.string,
+            foregroundImage: PropTypes.string,
             directory: PropTypes.string,
-            mode: PropTypes.oneOf(["AspectFill", "AspectFit", "ScaleToFill"])
+            mode: PropTypes.oneOf(["AspectFill", "AspectFit", "ScaleToFill"]),
+            maskname: PropTypes.string,
         }),
 
         permissionDialogTitle: PropTypes.string,
@@ -50,11 +52,11 @@ class SketchCanvas extends React.Component {
         style: null,
         strokeColor: "#000000",
         strokeWidth: 3,
-        onPathsChange: () => {},
-        onStrokeStart: () => {},
-        onStrokeChanged: () => {},
-        onStrokeEnd: () => {},
-        onSketchSaved: () => {},
+        onPathsChange: () => { },
+        onStrokeStart: () => { },
+        onStrokeChanged: () => { },
+        onStrokeEnd: () => { },
+        onSketchSaved: () => { },
         user: null,
 
         touchEnabled: true,
@@ -99,9 +101,8 @@ class SketchCanvas extends React.Component {
             if (this._paths.filter((p) => p.path.id === data.path.id).length === 0) this._paths.push(data);
             const pathData = data.path.data.map((p) => {
                 const coor = p.split(",").map((pp) => parseFloat(pp).toFixed(2));
-                return `${(coor[0] * this._screenScale * this._size.width) / data.size.width},${
-                    (coor[1] * this._screenScale * this._size.height) / data.size.height
-                }`;
+                return `${(coor[0] * this._screenScale * this._size.width) / data.size.width},${(coor[1] * this._screenScale * this._size.height) / data.size.height
+                    }`;
             });
             UIManager.dispatchViewManagerCommand(
                 this._handle,
@@ -123,11 +124,13 @@ class SketchCanvas extends React.Component {
         );
     }
 
-    save(imageType, transparent, folder, filename, includeImage, cropToImageSize) {
+    save(imageType, folder, filename, transparent, includeImage, cropToImageSize, cropToBackgroundSize, cropToForegroundSize) {
+        // console.log("SketchCanvas save");
+        
         UIManager.dispatchViewManagerCommand(
             this._handle,
             UIManager.getViewManagerConfig("RNSketchCanvas").Commands.save,
-            [imageType, folder, filename, transparent, includeImage, cropToImageSize]
+            [imageType, folder, filename, transparent, includeImage, cropToImageSize, cropToBackgroundSize, cropToForegroundSize ]
         );
     }
 
@@ -238,6 +241,7 @@ class SketchCanvas extends React.Component {
     }
 
     render() {
+
         return (
             <RNSketchCanvas
                 ref={(ref) => {
@@ -262,6 +266,7 @@ class SketchCanvas extends React.Component {
                 localSourceImage={this.props.localSourceImage}
                 permissionDialogTitle={this.props.permissionDialogTitle}
                 permissionDialogMessage={this.props.permissionDialogMessage}
+                
             />
         );
     }

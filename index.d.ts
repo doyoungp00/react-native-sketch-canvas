@@ -28,12 +28,16 @@ export interface SavePreference {
     imageType: ImageType;
     includeImage?: boolean;
     cropToImageSize?: boolean;
+    cropToBackgroundSize?: boolean;
+    cropToForegroundSize?: boolean;
 }
 
 export interface LocalSourceImage {
-    path: string;
+    backgroundImage?: string;
+    foregroundImage?: string;
     directory?: string;
     mode?: "AspectFill" | "AspectFit" | "ScaleToFill";
+    maskname?: string;
 }
 
 export interface SketchCanvasProps {
@@ -79,7 +83,9 @@ export class SketchCanvas extends React.Component<SketchCanvasProps & ViewProps>
         folder: string,
         filename: string,
         includeImage: boolean,
-        cropToImageSize: boolean
+        cropToImageSize: boolean,
+        cropToBackgroundSize: boolean,
+        cropToForegroundSize: boolean
     ): void;
     getPaths(): Path[];
 
@@ -93,6 +99,8 @@ export class SketchCanvas extends React.Component<SketchCanvasProps & ViewProps>
         transparent: boolean,
         includeImage: boolean,
         cropToImageSize: boolean,
+        cropToBackgroundSize: boolean,
+        cropToForegroundSize: boolean,
         callback: (error: any, result?: string) => void
     ): void;
 
@@ -146,6 +154,8 @@ export interface RNSketchCanvasProps {
         imageType: ImageType;
         includeImage?: boolean;
         cropToImageSize?: boolean;
+        cropToBackgroundSize?: boolean;
+        cropToForegroundSize?: boolean;
     };
     onSketchSaved?: (result: boolean, path: string) => void;
 

@@ -21,15 +21,17 @@ public class SketchCanvasModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void transferToBase64(final int tag, final String type, final boolean transparent, 
-        final boolean includeImage, final boolean cropToImageSize, final Callback callback){
+    public void transferToBase64(final int tag, final String type, final boolean transparent,
+            final boolean includeImage, final boolean cropToImageSize, final boolean cropToBackgroundSize,
+            final boolean cropToForegroundSize, final Callback callback) {
         try {
             final ReactApplicationContext context = getReactApplicationContext();
             UIManagerModule uiManager = context.getNativeModule(UIManagerModule.class);
             uiManager.addUIBlock(new UIBlock() {
                 public void execute(NativeViewHierarchyManager nvhm) {
                     SketchCanvas view = (SketchCanvas) nvhm.resolveView(tag);
-                    String base64 = view.getBase64(type, transparent, includeImage, cropToImageSize);
+                    String base64 = view.getBase64(type, transparent, includeImage, cropToImageSize,
+                            cropToBackgroundSize, cropToForegroundSize);
                     callback.invoke(null, base64);
                 }
             });
